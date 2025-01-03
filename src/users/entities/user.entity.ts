@@ -1,14 +1,21 @@
+import { ConversationMember } from 'src/conversation-members/entities/conversation-member.entity';
+import { Conversation } from 'src/conversations/entities/conversation.entity';
+import { Friend } from 'src/friends/entities/friend.entity';
+import { MessageStatus } from 'src/message-status/entities/message-status.entity';
+import { Message } from 'src/messages/entities/message.entity';
+// import { Message } from 'src/messages/entities/message.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('users')
 export class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'bigint' })
   key_id: number;
 
   @Column({ unique: true, length: 50 })
@@ -34,6 +41,26 @@ export class User {
 
   @Column({ nullable: true })
   currentTokenId: string; // 新增字段，用于存储当前有效的 Token ID (jti)
+
+  // 发送的好友请求
+  @OneToMany(() => Friend, (friend) => friend.user)
+  friendsSent: Friend[];
+
+  // 接收的好友请求
+  @OneToMany(() => Friend, (friend) => friend.friend)
+  friendsReceived: Friend[];
+
+  @OneToMany(() => Message, (message) => message.sender)
+  sentMessages: Message[];
+
+  @OneToMany(() => Conversation, (conversation) => conversation.creator)
+  createdConversations: Conversation[];
+
+  @OneToMany(() => ConversationMember, (member) => member.user)
+  conversationMemberships: ConversationMember[];
+
+  @OneToMany(() => MessageStatus, (status) => status.user)
+  messageStatuses: MessageStatus[];
 
   @CreateDateColumn({ nullable: true })
   created_at: Date;

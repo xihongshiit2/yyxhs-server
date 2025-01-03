@@ -1,10 +1,15 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { LoggerModule } from './common/logger/logger.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { ProtectedController } from './protected/protected.controller';
+import { FriendsModule } from './friends/friends.module';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { ConversationsModule } from './conversations/conversations.module';
+import { MessagesModule } from './messages/messages.module';
+import { MessageStatusModule } from './message-status/message-status.module';
 
 @Module({
   imports: [
@@ -12,6 +17,12 @@ import { ProtectedController } from './protected/protected.controller';
       isGlobal: true, // 全局使用
       envFilePath: '.env', // 环境变量文件
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 1000 * 60, // 时间窗口
+        limit: 20, // 时间窗口内的最大请求次数
+      },
+    ]),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
@@ -31,6 +42,10 @@ import { ProtectedController } from './protected/protected.controller';
     UsersModule,
     LoggerModule,
     AuthModule,
+    FriendsModule,
+    ConversationsModule,
+    forwardRef(() => MessagesModule), // 使用 forwardRef
+    forwardRef(() => MessageStatusModule), // 使用 forwardRef
   ],
   controllers: [ProtectedController],
   providers: [],

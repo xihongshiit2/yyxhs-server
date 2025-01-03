@@ -12,7 +12,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     // 不使用默认的 NestJS 日志器
-    logger: false,
+    // logger: false,
   });
   app.setGlobalPrefix('/v1/api');
   // 获取自定义日志器

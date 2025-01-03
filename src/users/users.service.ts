@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { User } from './entities/user.entity';
-import { QueryFailedError, Repository } from 'typeorm';
+import { In, QueryFailedError, Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -105,5 +105,13 @@ export class UsersService {
    */
   async updateTokenId(userId: number, tokenId: string | null): Promise<void> {
     await this.usersRepository.update(userId, { currentTokenId: tokenId });
+  }
+
+  /**
+   * 根据用户ID数组获取用户列表
+   * @param userIds 用户ID数组
+   */
+  async findUsersByIds(userIds: number[]): Promise<User[]> {
+    return this.usersRepository.findBy({ key_id: In(userIds) });
   }
 }
