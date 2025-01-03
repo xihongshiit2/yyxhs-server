@@ -1,3 +1,4 @@
+import { Call } from 'src/calls/entities/call.entity';
 import { ConversationMember } from 'src/conversation-members/entities/conversation-member.entity';
 import { Conversation } from 'src/conversations/entities/conversation.entity';
 import { Friend } from 'src/friends/entities/friend.entity';
@@ -61,6 +62,12 @@ export class User {
 
   @OneToMany(() => MessageStatus, (status) => status.user)
   messageStatuses: MessageStatus[];
+
+  @OneToMany(() => Call, (call) => call.caller)
+  callerCalls: Call[];
+
+  @OneToMany(() => Call, (call) => call.callee)
+  calleeCalls: Call[];
 
   @CreateDateColumn({ nullable: true })
   created_at: Date;

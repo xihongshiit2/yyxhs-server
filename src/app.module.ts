@@ -10,6 +10,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { ConversationsModule } from './conversations/conversations.module';
 import { MessagesModule } from './messages/messages.module';
 import { MessageStatusModule } from './message-status/message-status.module';
+import { CallsModule } from './calls/calls.module';
 
 @Module({
   imports: [
@@ -45,7 +46,8 @@ import { MessageStatusModule } from './message-status/message-status.module';
     FriendsModule,
     ConversationsModule,
     forwardRef(() => MessagesModule), // 使用 forwardRef
-    forwardRef(() => MessageStatusModule), // 使用 forwardRef
+    forwardRef(() => MessageStatusModule),
+    CallsModule, // 使用 forwardRef
   ],
   controllers: [ProtectedController],
   providers: [],
